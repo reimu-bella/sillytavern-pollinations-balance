@@ -8,17 +8,17 @@
             <div class="pollinations-balance-summary">
                 <div class="pollinations-balance-row">
                     <span class="pollinations-balance-label">Total pollen balance</span>
-                    <span id="pollinations_balance_value" class="pollinations-balance-value">Not loaded</span>
+                    <span id="pollinations_balance_value" class="pollinations-balance-value" data-pollinations-balance-total>Not loaded</span>
                 </div>
                 <div class="pollinations-balance-row">
                     <span class="pollinations-balance-label">Estimated tier pollen remaining</span>
-                    <span id="pollinations_balance_tier_value" class="pollinations-balance-value">Not estimated</span>
+                    <span id="pollinations_balance_tier_value" class="pollinations-balance-value" data-pollinations-balance-tier>Not estimated</span>
                 </div>
                 <div class="pollinations-balance-row">
                     <span class="pollinations-balance-label">Estimated paid/other pollen</span>
-                    <span id="pollinations_balance_paid_value" class="pollinations-balance-value">Not estimated</span>
+                    <span id="pollinations_balance_paid_value" class="pollinations-balance-value" data-pollinations-balance-paid>Not estimated</span>
                 </div>
-                <small id="pollinations_balance_tier_meta" class="pollinations-balance-meta">
+                <small id="pollinations_balance_tier_meta" class="pollinations-balance-meta" data-pollinations-balance-tier-meta>
                     Requires profile and usage permissions.
                 </small>
             </div>
@@ -43,7 +43,7 @@
                 </button>
             </div>
 
-            <div id="pollinations_balance_status" class="pollinations-balance-status" aria-live="polite">
+            <div id="pollinations_balance_status" class="pollinations-balance-status" data-pollinations-balance-status aria-live="polite">
                 Add an API key to check your balance.
             </div>
 
