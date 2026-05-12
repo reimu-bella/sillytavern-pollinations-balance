@@ -3,12 +3,18 @@
 }
 
 #pollinations_balance_settings .pollinations-balance-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin: 0.5rem 0 0.75rem;
+}
+
+#pollinations_balance_settings .pollinations-balance-row {
     align-items: center;
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
     justify-content: space-between;
-    margin: 0.5rem 0 0.75rem;
 }
 
 #pollinations_balance_settings .pollinations-balance-label {
@@ -21,6 +27,15 @@
     font-size: 1.05rem;
     font-weight: 700;
     padding: 0.25rem 0.6rem;
+}
+
+#pollinations_balance_settings .pollinations-balance-meta {
+    opacity: 0.85;
+}
+
+#pollinations_balance_settings .pollinations-balance-meta[data-state="error"] {
+    color: var(--warning, #d66);
+    opacity: 1;
 }
 
 #pollinations_balance_settings .pollinations-balance-field-label {
