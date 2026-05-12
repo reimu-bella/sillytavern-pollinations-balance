@@ -11,7 +11,7 @@ const TIER_HOURLY_ALLOWANCES = Object.freeze({
 });
 
 /** Pollinations balance/usage can lag ~15s after a generation; refresh after this delay. */
-const GENERATION_REFRESH_DELAY_MS = 15_000;
+const GENERATION_REFRESH_DELAY_MS = 10_000;
 
 const defaultSettings = Object.freeze({
     apiKey: '',
