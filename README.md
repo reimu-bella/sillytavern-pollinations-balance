@@ -7,6 +7,7 @@ A small SillyTavern extension that displays your Pollinations pollen balance, es
 - Shows the current pollen balance from `https://gen.pollinations.ai/account/balance`.
 - Estimates hourly tier pollen remaining for Spore, Seed, and Flower accounts from recent `meter_source: "tier"` usage.
 - Estimates paid/other pollen as total balance minus estimated tier pollen remaining.
+- Adds an unobtrusive bottom-left tier-balance button that toggles a top-left balance panel on the main SillyTavern view.
 - Refreshes on SillyTavern app ready, manual button click, and `GENERATION_STARTED`.
 - Stores the API key in SillyTavern extension settings.
 - Prevents overlapping balance requests and shows loading/error/last-updated states.

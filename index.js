@@ -52,12 +52,87 @@ function cacheElements() {
         apiKeyInput: document.getElementById('pollinations_balance_api_key'),
         saveButton: document.getElementById('pollinations_balance_save'),
         refreshButton: document.getElementById('pollinations_balance_refresh'),
-        balanceValue: document.getElementById('pollinations_balance_value'),
-        tierValue: document.getElementById('pollinations_balance_tier_value'),
-        paidValue: document.getElementById('pollinations_balance_paid_value'),
-        tierMeta: document.getElementById('pollinations_balance_tier_meta'),
-        status: document.getElementById('pollinations_balance_status'),
+        floatingRefreshButton: document.getElementById('pollinations_balance_floating_refresh'),
+        floatingToggle: document.getElementById('pollinations_balance_floating_toggle'),
+        floatingPanel: document.getElementById('pollinations_balance_floating_panel'),
+        balanceValues: document.querySelectorAll('[data-pollinations-balance-total]'),
+        tierValues: document.querySelectorAll('[data-pollinations-balance-tier]'),
+        paidValues: document.querySelectorAll('[data-pollinations-balance-paid]'),
+        tierMetas: document.querySelectorAll('[data-pollinations-balance-tier-meta]'),
+        statusElements: document.querySelectorAll('[data-pollinations-balance-status]'),
     };
+}
+
+function setText(targets, text) {
+    for (const target of targets || []) {
+        target.textContent = text;
+    }
+}
+
+function setDataState(targets, state = '') {
+    for (const target of targets || []) {
+        target.dataset.state = state;
+    }
+}
+
+function createFloatingBalanceUi() {
+    if (document.getElementById('pollinations_balance_floating_toggle')) {
+        return;
+    }
+
+    const toggle = document.createElement('button');
+    toggle.id = 'pollinations_balance_floating_toggle';
+    toggle.className = 'pollinations-balance-floating-toggle';
+    toggle.type = 'button';
+    toggle.title = 'Show Pollinations balance';
+    toggle.setAttribute('aria-controls', 'pollinations_balance_floating_panel');
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.textContent = 'Pollen';
+
+    const panel = document.createElement('div');
+    panel.id = 'pollinations_balance_floating_panel';
+    panel.className = 'pollinations-balance-floating-panel';
+    panel.hidden = true;
+    panel.innerHTML = `
+        <div class="pollinations-balance-floating-header">
+            <strong>Pollinations Balance</strong>
+            <button id="pollinations_balance_floating_refresh" class="pollinations-balance-floating-refresh" type="button">
+                Refresh
+            </button>
+        </div>
+        <div class="pollinations-balance-summary pollinations-balance-floating-summary">
+            <div class="pollinations-balance-row">
+                <span class="pollinations-balance-label">Total</span>
+                <span class="pollinations-balance-value" data-pollinations-balance-total>Not loaded</span>
+            </div>
+            <div class="pollinations-balance-row">
+                <span class="pollinations-balance-label">Tier left</span>
+                <span class="pollinations-balance-value" data-pollinations-balance-tier>Not estimated</span>
+            </div>
+            <div class="pollinations-balance-row">
+                <span class="pollinations-balance-label">Paid/other</span>
+                <span class="pollinations-balance-value" data-pollinations-balance-paid>Not estimated</span>
+            </div>
+            <small class="pollinations-balance-meta" data-pollinations-balance-tier-meta>
+                Requires profile and usage permissions.
+            </small>
+        </div>
+        <div class="pollinations-balance-status pollinations-balance-floating-status" data-pollinations-balance-status aria-live="polite">
+            Add an API key in extension settings.
+        </div>
+    `;
+
+    toggle.addEventListener('click', () => {
+        const shouldOpen = panel.hidden;
+        panel.hidden = !shouldOpen;
+        toggle.setAttribute('aria-expanded', String(shouldOpen));
+    });
+
+    panel.querySelector('#pollinations_balance_floating_refresh')?.addEventListener('click', () => {
+        void refreshBalance('manual');
+    });
+
+    document.body.append(toggle, panel);
 }
 
 function formatBalance(balance) {
@@ -68,6 +143,14 @@ function formatBalance(balance) {
     return balance.toLocaleString(undefined, {
         maximumFractionDigits: 4,
     });
+}
+
+function formatTierButtonLabel(estimate) {
+    if (!estimate) {
+        return 'Pollen';
+    }
+
+    return `${formatBalance(estimate.remaining)} / ${formatBalance(estimate.allowance)} pol`;
 }
 
 function getCurrentHourWindow(now = new Date()) {
@@ -110,30 +193,18 @@ function formatUpdatedAt(value) {
 }
 
 function setStatus(message, state = '') {
-    if (!elements.status) {
-        return;
-    }
-
-    elements.status.textContent = message;
-    elements.status.dataset.state = state;
+    setText(elements.statusElements, message);
+    setDataState(elements.statusElements, state);
 }
 
 function renderTierEstimate(settings) {
     const estimate = settings.lastTierEstimate;
 
     if (!estimate) {
-        if (elements.tierValue) {
-            elements.tierValue.textContent = 'Not estimated';
-        }
-
-        if (elements.paidValue) {
-            elements.paidValue.textContent = 'Not estimated';
-        }
-
-        if (elements.tierMeta) {
-            elements.tierMeta.textContent = settings.lastEstimateError || 'Requires profile and usage permissions.';
-            elements.tierMeta.dataset.state = settings.lastEstimateError ? 'error' : '';
-        }
+        setText(elements.tierValues, 'Not estimated');
+        setText(elements.paidValues, 'Not estimated');
+        setText(elements.tierMetas, settings.lastEstimateError || 'Requires profile and usage permissions.');
+        setDataState(elements.tierMetas, settings.lastEstimateError ? 'error' : '');
 
         return;
     }
@@ -142,26 +213,25 @@ function renderTierEstimate(settings) {
         ? Math.max(settings.lastBalance - estimate.remaining, 0)
         : null;
 
-    if (elements.tierValue) {
-        elements.tierValue.textContent = `${formatBalance(estimate.remaining)} / ${formatBalance(estimate.allowance)}`;
-    }
+    setText(elements.tierValues, `${formatBalance(estimate.remaining)} / ${formatBalance(estimate.allowance)}`);
+    setText(elements.paidValues, formatBalance(paidEstimate));
 
-    if (elements.paidValue) {
-        elements.paidValue.textContent = formatBalance(paidEstimate);
-    }
-
-    if (elements.tierMeta) {
-        const resetTime = formatUpdatedAt(estimate.windowEnd);
-        elements.tierMeta.textContent = `${estimate.tier} tier, ${formatBalance(estimate.used)} estimated tier pollen used this hour. Resets around ${resetTime}.`;
-        elements.tierMeta.dataset.state = '';
-    }
+    const resetTime = formatUpdatedAt(estimate.windowEnd);
+    setText(elements.tierMetas, `${estimate.tier} tier, ${formatBalance(estimate.used)} estimated tier pollen used this hour. Resets around ${resetTime}.`);
+    setDataState(elements.tierMetas, '');
 }
 
 function setRefreshState(refreshing) {
     isRefreshing = refreshing;
 
-    if (elements.refreshButton) {
-        elements.refreshButton.disabled = refreshing;
+    for (const button of [elements.refreshButton, elements.floatingRefreshButton]) {
+        if (button) {
+            button.disabled = refreshing;
+        }
+    }
+
+    if (elements.floatingToggle) {
+        elements.floatingToggle.dataset.state = refreshing ? 'loading' : '';
     }
 }
 
@@ -172,8 +242,10 @@ function renderState() {
         elements.apiKeyInput.value = settings.apiKey;
     }
 
-    if (elements.balanceValue) {
-        elements.balanceValue.textContent = formatBalance(settings.lastBalance);
+    setText(elements.balanceValues, formatBalance(settings.lastBalance));
+
+    if (elements.floatingToggle) {
+        elements.floatingToggle.textContent = formatTierButtonLabel(settings.lastTierEstimate);
     }
 
     renderTierEstimate(settings);
@@ -355,6 +427,7 @@ async function initializeSettingsUi() {
     const { renderExtensionTemplateAsync } = SillyTavern.getContext();
 
     if (document.getElementById('pollinations_balance_settings')) {
+        createFloatingBalanceUi();
         cacheElements();
         renderState();
         return;
@@ -362,6 +435,7 @@ async function initializeSettingsUi() {
 
     const settingsHtml = await renderExtensionTemplateAsync(EXTENSION_FOLDER, 'settings');
     document.getElementById('extensions_settings2')?.insertAdjacentHTML('beforeend', settingsHtml);
+    createFloatingBalanceUi();
     cacheElements();
     bindEvents();
     renderState();
