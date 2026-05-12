@@ -10,6 +10,9 @@ const TIER_HOURLY_ALLOWANCES = Object.freeze({
     flower: 0.4,
 });
 
+/** Pollinations balance/usage can lag ~15s after a generation; refresh after this delay. */
+const GENERATION_REFRESH_DELAY_MS = 15_000;
+
 const defaultSettings = Object.freeze({
     apiKey: '',
     lastBalance: null,
@@ -21,6 +24,7 @@ const defaultSettings = Object.freeze({
 
 let isRefreshing = false;
 let elements = {};
+let generationRefreshTimeoutId = null;
 
 function getSettings() {
     const { extensionSettings } = SillyTavern.getContext();
@@ -445,13 +449,22 @@ async function initializeSettingsUi() {
     }
 }
 
+function scheduleGenerationBalanceRefresh() {
+    if (generationRefreshTimeoutId !== null) {
+        clearTimeout(generationRefreshTimeoutId);
+    }
+
+    generationRefreshTimeoutId = setTimeout(() => {
+        generationRefreshTimeoutId = null;
+        void refreshBalance('generation');
+    }, GENERATION_REFRESH_DELAY_MS);
+}
+
 function initialize() {
     const { eventSource, event_types } = SillyTavern.getContext();
 
     eventSource.on(event_types.APP_READY, initializeSettingsUi);
-    eventSource.on(event_types.GENERATION_ENDED, () => {
-        void refreshBalance('generation');
-    });
+    eventSource.on(event_types.GENERATION_ENDED, scheduleGenerationBalanceRefresh);
 }
 
 initialize();
