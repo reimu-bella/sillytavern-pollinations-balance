@@ -145,6 +145,14 @@ function formatBalance(balance) {
     });
 }
 
+function formatTierButtonLabel(estimate) {
+    if (!estimate) {
+        return 'Pollen';
+    }
+
+    return `${formatBalance(estimate.remaining)} / ${formatBalance(estimate.allowance)} pol`;
+}
+
 function getCurrentHourWindow(now = new Date()) {
     const windowStart = new Date(now);
     windowStart.setUTCMinutes(0, 0, 0);
@@ -237,9 +245,7 @@ function renderState() {
     setText(elements.balanceValues, formatBalance(settings.lastBalance));
 
     if (elements.floatingToggle) {
-        elements.floatingToggle.textContent = typeof settings.lastBalance === 'number'
-            ? `Pollen ${formatBalance(settings.lastBalance)}`
-            : 'Pollen';
+        elements.floatingToggle.textContent = formatTierButtonLabel(settings.lastTierEstimate);
     }
 
     renderTierEstimate(settings);
