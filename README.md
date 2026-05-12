@@ -1,6 +1,6 @@
 # SillyTavern Pollinations Balance
 
-A small SillyTavern extension that displays your Pollinations pollen balance, estimates hourly tier pollen remaining, and refreshes when a chat response generation starts.
+A small SillyTavern extension that displays your Pollinations pollen balance, estimates hourly tier pollen remaining, and refreshes after a chat response generation completes.
 
 ## Features
 
@@ -8,7 +8,7 @@ A small SillyTavern extension that displays your Pollinations pollen balance, es
 - Estimates hourly tier pollen remaining for Spore, Seed, and Flower accounts from recent `meter_source: "tier"` usage.
 - Estimates paid/other pollen as total balance minus estimated tier pollen remaining.
 - Adds an unobtrusive bottom-left tier-balance button that toggles a top-left balance panel on the main SillyTavern view.
-- Refreshes on SillyTavern app ready, manual button click, and `GENERATION_STARTED`.
+- Refreshes on SillyTavern app ready, manual button click, and `GENERATION_ENDED`.
 - Stores the API key in SillyTavern extension settings.
 - Prevents overlapping balance requests and shows loading/error/last-updated states.
 

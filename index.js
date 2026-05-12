@@ -369,7 +369,7 @@ async function refreshBalance(source = 'manual') {
     }
 
     setRefreshState(true);
-    setStatus(source === 'generation' ? 'Refreshing after generation started...' : 'Refreshing balance...');
+    setStatus(source === 'generation' ? 'Refreshing after generation completed...' : 'Refreshing balance...');
 
     try {
         const balanceData = await fetchAccountJson(BALANCE_ENDPOINT, apiKey, 'Balance');
@@ -449,7 +449,7 @@ function initialize() {
     const { eventSource, event_types } = SillyTavern.getContext();
 
     eventSource.on(event_types.APP_READY, initializeSettingsUi);
-    eventSource.on(event_types.GENERATION_STARTED, () => {
+    eventSource.on(event_types.GENERATION_ENDED, () => {
         void refreshBalance('generation');
     });
 }
