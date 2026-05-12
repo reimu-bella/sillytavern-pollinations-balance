@@ -6,8 +6,21 @@
         </div>
         <div class="inline-drawer-content">
             <div class="pollinations-balance-summary">
-                <span class="pollinations-balance-label">Current pollen balance</span>
-                <span id="pollinations_balance_value" class="pollinations-balance-value">Not loaded</span>
+                <div class="pollinations-balance-row">
+                    <span class="pollinations-balance-label">Total pollen balance</span>
+                    <span id="pollinations_balance_value" class="pollinations-balance-value">Not loaded</span>
+                </div>
+                <div class="pollinations-balance-row">
+                    <span class="pollinations-balance-label">Estimated tier pollen remaining</span>
+                    <span id="pollinations_balance_tier_value" class="pollinations-balance-value">Not estimated</span>
+                </div>
+                <div class="pollinations-balance-row">
+                    <span class="pollinations-balance-label">Estimated paid/other pollen</span>
+                    <span id="pollinations_balance_paid_value" class="pollinations-balance-value">Not estimated</span>
+                </div>
+                <small id="pollinations_balance_tier_meta" class="pollinations-balance-meta">
+                    Requires profile and usage permissions.
+                </small>
             </div>
 
             <label for="pollinations_balance_api_key" class="pollinations-balance-field-label">
@@ -18,7 +31,7 @@
                 class="text_pole pollinations-balance-api-key"
                 type="password"
                 autocomplete="off"
-                placeholder="pk_... or a constrained key with account:balance"
+                placeholder="pk_... with account:balance, account:profile, account:usage"
             />
 
             <div class="pollinations-balance-actions">
@@ -37,7 +50,8 @@
             <small class="pollinations-balance-help">
                 This browser extension sends the key directly to Pollinations using
                 <code>Authorization: Bearer</code>. Prefer a constrained/publishable key with only
-                <code>account:balance</code> permission.
+                <code>account:balance</code>, <code>account:profile</code>, and
+                <code>account:usage</code> permissions.
             </small>
         </div>
     </div>
