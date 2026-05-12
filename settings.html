@@ -1,0 +1,44 @@
+<div id="pollinations_balance_settings" class="pollinations-balance-settings">
+    <div class="inline-drawer">
+        <div class="inline-drawer-toggle inline-drawer-header">
+            <b>Pollinations Balance</b>
+            <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div>
+        </div>
+        <div class="inline-drawer-content">
+            <div class="pollinations-balance-summary">
+                <span class="pollinations-balance-label">Current pollen balance</span>
+                <span id="pollinations_balance_value" class="pollinations-balance-value">Not loaded</span>
+            </div>
+
+            <label for="pollinations_balance_api_key" class="pollinations-balance-field-label">
+                Pollinations API key
+            </label>
+            <input
+                id="pollinations_balance_api_key"
+                class="text_pole pollinations-balance-api-key"
+                type="password"
+                autocomplete="off"
+                placeholder="pk_... or a constrained key with account:balance"
+            />
+
+            <div class="pollinations-balance-actions">
+                <button id="pollinations_balance_save" class="menu_button" type="button">
+                    Save key
+                </button>
+                <button id="pollinations_balance_refresh" class="menu_button" type="button">
+                    Refresh balance
+                </button>
+            </div>
+
+            <div id="pollinations_balance_status" class="pollinations-balance-status" aria-live="polite">
+                Add an API key to check your balance.
+            </div>
+
+            <small class="pollinations-balance-help">
+                This browser extension sends the key directly to Pollinations using
+                <code>Authorization: Bearer</code>. Prefer a constrained/publishable key with only
+                <code>account:balance</code> permission.
+            </small>
+        </div>
+    </div>
+</div>

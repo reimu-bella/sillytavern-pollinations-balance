@@ -1,0 +1,10 @@
+{
+    "display_name": "Pollinations Balance",
+    "loading_order": 1,
+    "js": "index.js",
+    "css": "style.css",
+    "author": "Local extension",
+    "version": "1.0.0",
+    "auto_update": false,
+    "minimum_client_version": "1.12.0"
+}

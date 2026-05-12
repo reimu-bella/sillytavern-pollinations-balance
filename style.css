@@ -1,0 +1,59 @@
+#pollinations_balance_settings {
+    margin-top: 0.75rem;
+}
+
+#pollinations_balance_settings .pollinations-balance-summary {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: space-between;
+    margin: 0.5rem 0 0.75rem;
+}
+
+#pollinations_balance_settings .pollinations-balance-label {
+    font-weight: 600;
+}
+
+#pollinations_balance_settings .pollinations-balance-value {
+    border: 1px solid var(--SmartThemeBorderColor);
+    border-radius: 0.5rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    padding: 0.25rem 0.6rem;
+}
+
+#pollinations_balance_settings .pollinations-balance-field-label {
+    display: block;
+    margin-bottom: 0.35rem;
+}
+
+#pollinations_balance_settings .pollinations-balance-api-key {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+#pollinations_balance_settings .pollinations-balance-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0.75rem 0;
+}
+
+#pollinations_balance_settings .pollinations-balance-status {
+    margin-bottom: 0.5rem;
+    min-height: 1.25rem;
+}
+
+#pollinations_balance_settings .pollinations-balance-status[data-state="error"] {
+    color: var(--warning, #d66);
+}
+
+#pollinations_balance_settings .pollinations-balance-status[data-state="success"] {
+    color: var(--okGreen, #6a6);
+}
+
+#pollinations_balance_settings .pollinations-balance-help {
+    display: block;
+    opacity: 0.85;
+}
